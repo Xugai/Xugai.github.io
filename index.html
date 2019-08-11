@@ -80,12 +80,12 @@
 
 
 <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
+<meta property="og:title" content="Berio&#39;s Base Area">
 <meta property="og:url" content="http://yoursite.com/index.html">
-<meta property="og:site_name" content="Hexo">
+<meta property="og:site_name" content="Berio&#39;s Base Area">
 <meta property="og:locale" content="en">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="Berio&#39;s Base Area">
 
 
 
@@ -121,7 +121,7 @@
 
 
 
-  <title>Hexo</title>
+  <title>Berio's Base Area</title>
   
 
 
@@ -152,7 +152,7 @@
     <div class="custom-logo-site-title">
       <a href="/" class="brand" rel="start">
         <span class="logo-line-before"><i></i></span>
-        <span class="site-title">Hexo</span>
+        <span class="site-title">Berio's Base Area</span>
         <span class="logo-line-after"><i></i></span>
       </a>
     </div>
@@ -229,6 +229,128 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/NIO的同步非阻塞解释/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="John Doe">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Berio's Base Area">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/08/11/NIO的同步非阻塞解释/" itemprop="url">NIO的同步非阻塞解释</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-11T23:04:09+08:00">
+                2019-08-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>​    众所周知，IO模型可分为四种：BIO，伪异步IO，NIO以及AIO。其中，BIO是典型的同步阻塞式的IO工作模型，为什么这么说呢，因为BIO的工作场景是：在一个Web服务中，如果此时有一个客户端连接请求过来了，那么在服务器端，应用程序就会新起一个线程去处理，而只要当前该客户端没有主动释放连接，那么该线程就不会被回收掉。然后当该客户端连接有IO请求过来时，线程就随着去做相应的处理；没有请求时就一直阻塞在那里，同时还会占用一定的系统资源。</p>
+<p>​    在如上所述的场景里，对于线程来说，只要客户端那边有IO操作请求，那么线程此时才开始去干活。这个只要满足什么条件才去做什么事情的情况，就属于同步的工作方式了。而为什么说是阻塞呢，如果这个客户端当前没有任何IO操作请求，那么该线程就一直等待着，即使有其他事也不能去做，这种一直等待对方资源准备好才执行后续操作的方式，我们也就把它称之为阻塞。<strong>阻塞是一种状态，而同步是一种工作方式。</strong></p>
+<p>​    因此这也就不难解释为什么NIO是属于同步非阻塞了。对于NIO模型下的线程来说，它是由多路复用器（一般来说是Selector）创建产生的。客户端的IO请求事件注册在多路复用器上面，一旦有符合事件描述符的事情发生，那多路复用器就会将该事件select出来，然后创建一个新的线程，并把该事件交由该新线程去处理。在这个过程中，线程是在IO事件发生的时候创建的，而不是在IO事件还没有就绪好的情况下创建出来的，换句话说，在NIO的场景下，<strong>如果数据还没有完全准备好，那线程也不用先创建出来，只有等到数据全部都准备好后才适合创建线程出来。</strong>这样，在这种场景下，也就不存在线程阻塞这一说了。在NIO模型中，真正阻塞状态的，就只有多路复用器，因为它需要不断地去轮询类似消息队列的通道（Channel），检查队列里面是否有符合某些条件的事件发生，在还没有符合的事情发生前，该多路复用器也早就已经先创建出来了并且也依然一直在轮询等待，因此对于多路复用器来说，此时的它，其工作状态是阻塞的。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/ITA-2-months-target/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -238,7 +360,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="Berio's Base Area">
     </span>
 
     
@@ -368,7 +490,7 @@
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Hexo">
+      <meta itemprop="name" content="Berio's Base Area">
     </span>
 
     
@@ -524,7 +646,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -537,7 +659,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-count">2</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
