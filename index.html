@@ -309,7 +309,7 @@
 <p> 另外，从WebSocket我们可以衍生出Socket概念。什么是Socket呢，严格来说，Socket不是同WebSocket一样位于应用层的协议，它是位于第五层会话层中的协议。那它有什么用呢，我的理解是：我们都知道在二十六种设计模式中，有一种模式叫做门面模式，所谓门面模式，就是门内的东西是很复杂的、实现原理等的逻辑一般来说比较难理解，而通过门面模式，我们就可以定义一个接口，这个接口封装了门内复杂的代码逻辑，然后通过一种简明易了的方式把自己暴露出来供外来者访问并调用，这也就像是门面：门面装潢简易清新，但是门内的家具摆放各种陈列布局却复杂精妙。而Socket的存在便类似于门面，它负责把底层更加复杂的协议给封装起来，然后提供一个类似接口的通道，供上层协议使用。换句话说，Socket是应用层与传输层进行沟通通信的桥梁，它负责把应用层与传输层彼此相向传递的数据进行一次封装，封装成可以被彼此识别并解析的协议信息。</p>
 </li>
 </ul>
-<p><img src="%E5%8D%8F%E8%AE%AE%E5%B1%82%E4%BA%A4%E4%BA%92%E6%A8%A1%E5%9E%8B%E5%9B%BE.PNG" alt></p>
+<p><img src="....%5Cpublic%5Cimages%5C%E5%8D%8F%E8%AE%AE%E5%B1%82%E4%BA%A4%E4%BA%92%E6%A8%A1%E5%9E%8B%E5%9B%BE.PNG" alt></p>
 <p>​                                                                            图1-1 协议层交互通信模型图</p>
 <p>​    那么我们在一般场景下，该如何应用WebSocket呢，以下是代码示例：</p>
 <p>​    本示例中通过Netty服务器的使用，来作为服务端接收WebSocket请求，而使用Netty服务器的方式我们采用Java语言进行：</p>
@@ -335,13 +335,13 @@
 
 <p>现在，WebSocket的客户端与服务端我们都写好了，接下来就到了验证的时候了。</p>
 <p>通过浏览器，打开我们先前写好的HTML页面：</p>
-<p><img src="WebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_1.PNG" alt></p>
+<p><img src="....%5Cpublic%5Cimages%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_1.PNG" alt></p>
 <p>我们可以发现，多行文本框内显示的信息为：“WebSocket连接已经关闭”，同时控制台报了一个错误，这表明我们的服务端没有开启，客户端无法单方面打开一个WebSocket数据通信通道。接着我们开启服务端：</p>
-<p><img src="WebSocket%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%95%88%E6%9E%9C_1.PNG" alt></p>
+<p><img src="....%5Cpublic%5Cimages%5CWebSocket%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%95%88%E6%9E%9C_1.PNG" alt></p>
 <p>然后我们重新刷新客户端页面：</p>
-<p><img src="WebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_2.PNG" alt></p>
+<p><img src="....%5Cpublic%5Cimages%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_2.PNG" alt></p>
 <p>这时我们可以发现，现在控制台不会报错了，多行文本框内显示的提示内容为“您当前的浏览器支持WebSocket，请继续后续操作”。这时表明我们的客户端与服务端成功建立起了WebSocket数据传输通道，接下来我们通过客户端向服务端传递数据。往文本框中输入内容，然后点击发送websocket请求按钮，我们会看到，多行文本框中显示了我们在文本框中输入的内容：</p>
-<p><img src="WebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_3.PNG" alt></p>
+<p><img src="....%5Cpublic%5Cimages%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_3.PNG" alt></p>
 <p>这表明此次我们模拟客户端与服务端进行WebSocket通信的实验成功了。</p>
 
           
