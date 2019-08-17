@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="WebSocket,">
 
 
 
@@ -79,13 +79,24 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Berio&#39;s Base Area">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="​    在传统的Web中，客户端与服务器端的通信，基本都靠HTTP通信。HTTP通信有一个特点，每次客户端发起的HTTP请求，都会携带HEAD，这样就造成了无论此次请求体中携带的有效内容有多大，每次的请求都会占用一定的带宽，同时也会占用CPU的处理时间。对此，为了满足Web中日益增长的实时通信需求，WebSocket便应运而生了。 ​    同HTTP协议一样，WebSocket也是位于OSI七">
+<meta name="keywords" content="WebSocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="WebSocket的解说与使用">
+<meta property="og:url" content="http://yoursite.com/2019/08/17/WebSocket的解说与使用/index.html">
 <meta property="og:site_name" content="Berio&#39;s Base Area">
+<meta property="og:description" content="​    在传统的Web中，客户端与服务器端的通信，基本都靠HTTP通信。HTTP通信有一个特点，每次客户端发起的HTTP请求，都会携带HEAD，这样就造成了无论此次请求体中携带的有效内容有多大，每次的请求都会占用一定的带宽，同时也会占用CPU的处理时间。对此，为了满足Web中日益增长的实时通信需求，WebSocket便应运而生了。 ​    同HTTP协议一样，WebSocket也是位于OSI七">
 <meta property="og:locale" content="en">
+<meta property="og:image" content="c:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5C%E5%8D%8F%E8%AE%AE%E5%B1%82%E4%BA%A4%E4%BA%92%E6%A8%A1%E5%9E%8B%E5%9B%BE.PNG">
+<meta property="og:image" content="c:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_1.PNG">
+<meta property="og:image" content="c:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5CWebSocket%E6%9C%8D%E5%8A%A1%E7%AB%AF%E6%95%88%E6%9E%9C_1.PNG">
+<meta property="og:image" content="c:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_2.PNG">
+<meta property="og:image" content="c:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_3.PNG">
+<meta property="og:updated_time" content="2019-08-17T15:33:23.428Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Berio&#39;s Base Area">
+<meta name="twitter:title" content="WebSocket的解说与使用">
+<meta name="twitter:description" content="​    在传统的Web中，客户端与服务器端的通信，基本都靠HTTP通信。HTTP通信有一个特点，每次客户端发起的HTTP请求，都会携带HEAD，这样就造成了无论此次请求体中携带的有效内容有多大，每次的请求都会占用一定的带宽，同时也会占用CPU的处理时间。对此，为了满足Web中日益增长的实时通信需求，WebSocket便应运而生了。 ​    同HTTP协议一样，WebSocket也是位于OSI七">
+<meta name="twitter:image" content="c:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5C%E5%8D%8F%E8%AE%AE%E5%B1%82%E4%BA%A4%E4%BA%92%E6%A8%A1%E5%9E%8B%E5%9B%BE.PNG">
 
 
 
@@ -115,13 +126,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/">
+  <link rel="canonical" href="http://yoursite.com/2019/08/17/WebSocket的解说与使用/">
 
 
 
 
 
-  <title>Berio's Base Area</title>
+  <title>WebSocket的解说与使用 | Berio's Base Area</title>
   
 
 
@@ -140,8 +151,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -214,9 +224,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -246,9 +256,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/17/WebSocket的解说与使用/" itemprop="url">WebSocket的解说与使用</a></h1>
+          <h1 class="post-title" itemprop="name headline">WebSocket的解说与使用</h1>
         
 
         <div class="post-meta">
@@ -298,9 +306,7 @@
       
 
       
-        
-          
-            <p>​    在传统的Web中，客户端与服务器端的通信，基本都靠HTTP通信。HTTP通信有一个特点，每次客户端发起的HTTP请求，都会携带HEAD，这样就造成了无论此次请求体中携带的有效内容有多大，每次的请求都会占用一定的带宽，同时也会占用CPU的处理时间。对此，为了满足Web中日益增长的实时通信需求，WebSocket便应运而生了。</p>
+        <p>​    在传统的Web中，客户端与服务器端的通信，基本都靠HTTP通信。HTTP通信有一个特点，每次客户端发起的HTTP请求，都会携带HEAD，这样就造成了无论此次请求体中携带的有效内容有多大，每次的请求都会占用一定的带宽，同时也会占用CPU的处理时间。对此，为了满足Web中日益增长的实时通信需求，WebSocket便应运而生了。</p>
 <p>​    同HTTP协议一样，WebSocket也是位于OSI七层模型中的顶层——应用层。它们两者都属于应用层协议，都是通过会话层（位于OSI七层模型中的第五层）与传输层TCP/IP协议进行交互，然后进行各自的通信。但两者是有区别的：</p>
 <ul>
 <li><p>在TCP握手次数方面，HTTP通信的建立与断开需要依靠TCP的三次握手与四次挥手；而WebSocket的建立，只需要进行一次TCP握手跟一次挥手，便能完成客户端与服务器端的整个通信过程。</p>
@@ -344,8 +350,6 @@
 <p><img src="C:%5CUsers%5Crabbit%5CDesktop%5CBlog%5Csource_posts%5CWebSocket%E5%AE%A2%E6%88%B7%E7%AB%AF%E6%95%88%E6%9E%9C_3.PNG" alt></p>
 <p>这表明此次我们模拟客户端与服务端进行WebSocket通信的实验成功了。</p>
 
-          
-        
       
     </div>
     
@@ -360,266 +364,36 @@
 
     <footer class="post-footer">
       
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/NIO的同步非阻塞解释/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Berio's Base Area">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/11/NIO的同步非阻塞解释/" itemprop="url">NIO的同步非阻塞解释</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-11T23:04:09+08:00">
-                2019-08-11
-              </time>
-            
-
-            
-
-            
-          </span>
-
+        <div class="post-tags">
           
-
+            <a href="/tags/WebSocket/" rel="tag"># WebSocket</a>
           
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>​    众所周知，IO模型可分为四种：BIO，伪异步IO，NIO以及AIO。其中，BIO是典型的同步阻塞式的IO工作模型，为什么这么说呢，因为BIO的工作场景是：在一个Web服务中，如果此时有一个客户端连接请求过来了，那么在服务器端，应用程序就会新起一个线程去处理，而只要当前该客户端没有主动释放连接，那么该线程就不会被回收掉。然后当该客户端连接有IO请求过来时，线程就随着去做相应的处理；没有请求时就一直阻塞在那里，同时还会占用一定的系统资源。</p>
-<p>​    在如上所述的场景里，对于线程来说，只要客户端那边有IO操作请求，那么线程此时才开始去干活。这个只要满足什么条件才去做什么事情的情况，就属于同步的工作方式了。而为什么说是阻塞呢，如果这个客户端当前没有任何IO操作请求，那么该线程就一直等待着，即使有其他事也不能去做，这种一直等待对方资源准备好才执行后续操作的方式，我们也就把它称之为阻塞。<strong>阻塞是一种状态，而同步是一种工作方式。</strong></p>
-<p>​    因此这也就不难解释为什么NIO是属于同步非阻塞了。对于NIO模型下的线程来说，它是由多路复用器（一般来说是Selector）创建产生的。客户端的IO请求事件注册在多路复用器上面，一旦有符合事件描述符的事情发生，那多路复用器就会将该事件select出来，然后创建一个新的线程，并把该事件交由该新线程去处理。在这个过程中，线程是在IO事件发生的时候创建的，而不是在IO事件还没有就绪好的情况下创建出来的，换句话说，在NIO的场景下，<strong>如果数据还没有完全准备好，那线程也不用先创建出来，只有等到数据全部都准备好后才适合创建线程出来。</strong>这样，在这种场景下，也就不存在线程阻塞这一说了。在NIO模型中，真正阻塞状态的，就只有多路复用器，因为它需要不断地去轮询类似消息队列的通道（Channel），检查队列里面是否有符合某些条件的事件发生，在还没有符合的事情发生前，该多路复用器也早就已经先创建出来了并且也依然一直在轮询等待，因此对于多路复用器来说，此时的它，其工作状态是阻塞的。</p>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
       
 
       
       
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
       
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/ITA-2-months-target/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Berio's Base Area">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/11/ITA-2-months-target/" itemprop="url">ITA_2_months_target</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-11T21:03:34+08:00">
-                2019-08-11
-              </time>
+              <a href="/2019/08/11/NIO的同步非阻塞解释/" rel="next" title="NIO的同步非阻塞解释">
+                <i class="fa fa-chevron-left"></i> NIO的同步非阻塞解释
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-            <p>ITA两个月学习目标：</p>
-<blockquote>
-<p>​        一个月过去了，这过去的一个月里，自己学习了DUBBO，写了Demo。基本了解了RPC的作用以及DUBBO的工作机制，但依旧没有机会上手搞项目实战。在我写下这篇目标博文的前两个星期，自己又开始去看Netty相关的知识，从基础的四大IO模型以及WebSocket基本使用方法入手，渐渐我发现，虽然通过自己的兴趣爱好去学习自己感兴趣的东西是无可厚非值得鼓励的，但这样好像总不太能把某项技术的原理给了解吃透，或者说自己只是懂每项技术的冰山一角，而蕴藏在海底下的那一大块知识，汲取后才是更加诱人更加具有竞争力的，所以我觉得，自己还是不能太眼高手低，今天看了一点那个，明天看了一点这个，就觉得好像满足了。自己真正应该去做的，是静下心来，好好抓着某项技术去熟悉，实战，了解它的运用场景与一些底层的实现机制，所以自己决定，在未来的两个月里，自己打算通过阅读《深入理解Java虚拟机》来对JVM有一个较为深刻的认识，而自己在这个过程需要掌握的有：</p>
-<ul>
-<li>JVM的内存划分模型</li>
-<li>常见的JVM垃圾回收算法有哪些，以及常见的垃圾收集器又有哪些，作用分别是什么</li>
-<li>尝试模拟不同情况的GC操作（Major GC，Minor GC，Full GC）</li>
-<li>尝试通过改变JVM的GC策略，来达到JVM性能调优的目的</li>
-<li>熟悉并操作常见的JVM监控调优工具</li>
-</ul>
-</blockquote>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -629,142 +403,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/08/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
-      <meta itemprop="description" content>
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Berio's Base Area">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2019/08/08/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-08T22:28:33+08:00">
-                2019-08-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -772,6 +415,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -977,6 +624,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
