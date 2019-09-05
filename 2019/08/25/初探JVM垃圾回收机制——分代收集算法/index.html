@@ -243,7 +243,7 @@
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="John Doe">
+      <meta itemprop="name" content="Berio Xu">
       <meta itemprop="description" content>
       <meta itemprop="image" content="/images/avatar.gif">
     </span>
@@ -320,7 +320,7 @@
 <p>如下图所示，假设这一次当JVM初始化完成时，我们新生成了6个对象，这6个对象刚好填满Eden区：</p>
 <p><img src="GC_1.PNG" alt></p>
 <p>然后下一次我们又有新的对象生成，新的对象也需要放入Eden区，但这时候JVM发现Eden区空间已经不够用了，遂触发一次GC，然后这次GC呢，JVM发现目前现存的6个对象里面，有两个对象从GC Root出发已经不可达了，这两个对象的引用链已经失效了，那么就符合回收原则，因此对这两个对象进行回收（图中灰色小方块即是将要被GC掉的对象）：</p>
-<p><img src="GC_2" alt></p>
+<p><img src="GC_2.PNG" alt></p>
 <p>然后将此次GC后幸存的对象，移动到survivor1区中，这4个对象因为在第一次GC期间存活了下来，因此JVM将他们标记为1岁，然后这时新创建的对象便能存放进Eden区中了：</p>
 <p><img src="GC_3.PNG" alt></p>
 <p>紧接着，当我们不断创建新对象，直到又把Eden区填满，然后又触发了一次GC，这时我们的Survivor1区也被幸存的对象填满了，因此这一次的GC会在Eden区与Survivor1区上进行，然后此时发现Eden区只有1个对象是可以继续存活的，Survivor1区有3个对象是可以继续存活的：</p>
@@ -424,7 +424,7 @@
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
-              <p class="site-author-name" itemprop="name">John Doe</p>
+              <p class="site-author-name" itemprop="name">Berio Xu</p>
               <p class="site-description motion-element" itemprop="description"></p>
           </div>
 
@@ -489,7 +489,7 @@
   <span class="with-love">
     <i class="fa fa-user"></i>
   </span>
-  <span class="author" itemprop="copyrightHolder">John Doe</span>
+  <span class="author" itemprop="copyrightHolder">Berio Xu</span>
 
   
 </div>
