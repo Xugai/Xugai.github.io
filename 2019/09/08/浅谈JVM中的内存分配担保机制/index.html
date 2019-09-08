@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="IO模型,">
+  <meta name="keywords" content="JVM,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="​    众所周知，IO模型可分为四种：BIO，伪异步IO，NIO以及AIO。其中，BIO是典型的同步阻塞式的IO工作模型，为什么这么说呢，因为BIO的工作场景是：在一个Web服务中，如果此时有一个客户端连接请求过来了，那么在服务器端，应用程序就会新起一个线程去处理，而只要当前该客户端没有主动释放连接，那么该线程就不会被回收掉。然后当该客户端连接有IO请求过来时，线程就随着去做相应的处理；没有请求">
-<meta name="keywords" content="IO模型">
+<meta name="description" content="​    我们都知道，JVM在GC时，那当前的内存区域划分为两块空间，一块是新生代，一块是老年代。而我们平时常听到的所谓Minor GC，Major GC以及Full GC，它们所对应的GC范围以及概念是：  Minor GC：指发生在新生代的GC行为。我们都知道，默认配置情况下，JVM把年轻代又进一步划分为三块区域，一个Eden区，两个Survivor区，它们的比例是8:1:1。如果此次年轻代里">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="NIO的同步非阻塞解释">
-<meta property="og:url" content="http://yoursite.com/2019/08/11/NIO的同步非阻塞解释/index.html">
+<meta property="og:title" content="浅谈JVM中的内存分配担保机制">
+<meta property="og:url" content="http://yoursite.com/2019/09/08/浅谈JVM中的内存分配担保机制/index.html">
 <meta property="og:site_name" content="Berio&#39;s Base Area">
-<meta property="og:description" content="​    众所周知，IO模型可分为四种：BIO，伪异步IO，NIO以及AIO。其中，BIO是典型的同步阻塞式的IO工作模型，为什么这么说呢，因为BIO的工作场景是：在一个Web服务中，如果此时有一个客户端连接请求过来了，那么在服务器端，应用程序就会新起一个线程去处理，而只要当前该客户端没有主动释放连接，那么该线程就不会被回收掉。然后当该客户端连接有IO请求过来时，线程就随着去做相应的处理；没有请求">
+<meta property="og:description" content="​    我们都知道，JVM在GC时，那当前的内存区域划分为两块空间，一块是新生代，一块是老年代。而我们平时常听到的所谓Minor GC，Major GC以及Full GC，它们所对应的GC范围以及概念是：  Minor GC：指发生在新生代的GC行为。我们都知道，默认配置情况下，JVM把年轻代又进一步划分为三块区域，一个Eden区，两个Survivor区，它们的比例是8:1:1。如果此次年轻代里">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-11T15:25:29.492Z">
+<meta property="og:updated_time" content="2019-09-08T04:20:23.710Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="NIO的同步非阻塞解释">
-<meta name="twitter:description" content="​    众所周知，IO模型可分为四种：BIO，伪异步IO，NIO以及AIO。其中，BIO是典型的同步阻塞式的IO工作模型，为什么这么说呢，因为BIO的工作场景是：在一个Web服务中，如果此时有一个客户端连接请求过来了，那么在服务器端，应用程序就会新起一个线程去处理，而只要当前该客户端没有主动释放连接，那么该线程就不会被回收掉。然后当该客户端连接有IO请求过来时，线程就随着去做相应的处理；没有请求">
+<meta name="twitter:title" content="浅谈JVM中的内存分配担保机制">
+<meta name="twitter:description" content="​    我们都知道，JVM在GC时，那当前的内存区域划分为两块空间，一块是新生代，一块是老年代。而我们平时常听到的所谓Minor GC，Major GC以及Full GC，它们所对应的GC范围以及概念是：  Minor GC：指发生在新生代的GC行为。我们都知道，默认配置情况下，JVM把年轻代又进一步划分为三块区域，一个Eden区，两个Survivor区，它们的比例是8:1:1。如果此次年轻代里">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/08/11/NIO的同步非阻塞解释/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/08/浅谈JVM中的内存分配担保机制/">
 
 
 
 
 
-  <title>NIO的同步非阻塞解释 | Berio's Base Area</title>
+  <title>浅谈JVM中的内存分配担保机制 | Berio's Base Area</title>
   
 
 
@@ -233,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/NIO的同步非阻塞解释/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/08/浅谈JVM中的内存分配担保机制/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Berio Xu">
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">NIO的同步非阻塞解释</h1>
+          <h1 class="post-title" itemprop="name headline">浅谈JVM中的内存分配担保机制</h1>
         
 
         <div class="post-meta">
@@ -262,8 +262,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-11T23:04:09+08:00">
-                2019-08-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-08T10:57:20+08:00">
+                2019-09-08
               </time>
             
 
@@ -300,9 +300,24 @@
       
 
       
-        <p>​    众所周知，IO模型可分为四种：BIO，伪异步IO，NIO以及AIO。其中，BIO是典型的同步阻塞式的IO工作模型，为什么这么说呢，因为BIO的工作场景是：在一个Web服务中，如果此时有一个客户端连接请求过来了，那么在服务器端，应用程序就会新起一个线程去处理，而只要当前该客户端没有主动释放连接，那么该线程就不会被回收掉。然后当该客户端连接有IO请求过来时，线程就随着去做相应的处理；没有请求时就一直阻塞在那里，同时还会占用一定的系统资源。</p>
-<p>​    在如上所述的场景里，对于线程来说，只要客户端那边有IO操作请求，那么线程此时才开始去干活。这个只要满足什么条件才去做什么事情的情况，就属于同步的工作方式了。而为什么说是阻塞呢，如果这个客户端当前没有任何IO操作请求，那么该线程就一直等待着，即使有其他事也不能去做，这种一直等待对方资源准备好才执行后续操作的方式，我们也就把它称之为阻塞。<strong>阻塞是一种状态，而同步是一种工作方式。</strong></p>
-<p>​    因此这也就不难解释为什么NIO是属于同步非阻塞了。对于NIO模型下的线程来说，它是由多路复用器（一般来说是Selector）创建产生的。客户端的IO请求事件注册在多路复用器上面，一旦有符合事件描述符的事情发生，那多路复用器就会将该事件select出来，然后创建一个新的线程，并把该事件交由该新线程去处理。在这个过程中，线程是在IO事件发生的时候创建的，而不是在IO事件还没有就绪好的情况下创建出来的，换句话说，在NIO的场景下，<strong>如果数据还没有完全准备好，那线程也不用先创建出来，只有等到数据全部都准备好后才适合创建线程出来。</strong>这样，在这种场景下，也就不存在线程阻塞这一说了。在NIO模型中，真正阻塞状态的，就只有多路复用器，因为它需要不断地去轮询类似消息队列的通道（Channel），检查队列里面是否有符合某些条件的事件发生，在还没有符合的事情发生前，该多路复用器也早就已经先创建出来了并且也依然一直在轮询等待，因此对于多路复用器来说，此时的它，其工作状态是阻塞的。</p>
+        <p>​    我们都知道，JVM在GC时，那当前的内存区域划分为两块空间，一块是新生代，一块是老年代。而我们平时常听到的所谓Minor GC，Major GC以及Full GC，它们所对应的GC范围以及概念是：</p>
+<ul>
+<li><p>Minor GC：指发生在新生代的GC行为。我们都知道，默认配置情况下，JVM把年轻代又进一步划分为三块区域，一个Eden区，两个Survivor区，它们的比例是8:1:1。如果此次年轻代里面的内存容量无法容纳应用程序这一次新创建出来的对象大小的话，便会触发一次GC，这时也即是我们口中的Minor GC。</p>
+</li>
+<li><p>Major GC：指发生在老年代的GC行为。与新生代不同，老年代没有再进一步划分为几块存储区域了，默认配置情况下，如果JVM检测到新生代中的对象的存活年龄大于13岁，那么在此次Minor GC时，JVM便会将该对象移到老年代中。如果新生代中有大批大批存活年龄大于13岁的对象，那么老年代自然而然便会存放越来越多的“老”对象，以致在下一次当JVM想要把新生代中的“老”对象移到这边时，发现此时老年代中的最大可用的连续内存空间无法容纳此次的“老”对象时，便会触发一次Major GC。</p>
+</li>
+<li><p>Full GC：在三种GC情况类别中，Full GC是耗时最长、占用资源最久的GC情况类别了。Full GC呢，顾名思义，就是对JVM的整个内存区域进行一次全范围的GC，包括新生代、老年代以及元空间（metaspace，jdk8以上已经取代了perm gen）。现在业内的观点有些认为，其实Full GC与Major GC是等价的，由于HotSpot VM发展了这么多年，业界对于GC相关的一些名词解释已经有些混乱，各家有各家的说法。博主在网上查资料，发现如今HotSpot VM的实现，准确来说GC只分为两种：</p>
+<ul>
+<li>一种是Partial GC，其并不收集整个GC堆。其包括young gc、old gc、mixed gc。</li>
+<li>一种是Full GC，收集整个堆。包括young gen，old gen以及perm gen（已经在jdk8版本摒弃了，转而使用metaspace定义）。</li>
+</ul>
+<p>因此，真正准确来说，Full GC与Major GC是等价的，如果真有人问起Major GC的话，那我们反倒应该确认其讲的是第一种情况还是第二种情况的GC。</p>
+</li>
+</ul>
+<p>大体说完上述的GC类别，接着我们来进入正题：什么是内存分配担保？什么时候会发生内存担保？</p>
+<p>​    我们都知道，对象在第一次新创建出来时，它会被放入新生代中的eden区。而当越来越多的对象新创建出来时，新生代也会随着不断填满，当在下一次往新生代中存放对象，而此时JVM又发现新生代中无法容纳此次新建对象的话，那么便会触发Minor GC。</p>
+<p>​    在真正触发Minor GC之前，JVM会先去老年代中检查最大可用的连续内存空间是否大于新生代中的所有对象总空间，如果这个条件成立，那么这一次的Minor GC是安全的，为什么说是安全的呢？考虑这么一种情况，如果此次Minor GC执行完成后，<strong>所有的对象都存活下来了</strong>，没有对象朝生夕灭，那么此时新创建的对象，依旧无法放入新生代中。那么对于这样的极端情况，JVM采用的应对策略便是<strong>老年代的内存分配担保策略</strong>。当发生上述情况时，JVM会将此时新生代中无法容纳的对象直接存放进老年代，这就有点像生活中的贷款担保，老年代便是要进行这样的担保。当然，前提是老年代中本身还有容纳这些对象的内存空间，一共有多少对象会存活下来，在实际真正完成内存回收之前是无法确定的，所以出于安全考虑，JVM会取之前每一次回收晋升到老年代对象的容量的平均大小值作为一个参考，与目前老年代中的剩余空间进行比较，以此来确认本次内存分配担保是否可以成功，又或者真正需要进行一次Full GC来让老年代腾出更多的内存空间。</p>
+<p>​    当然，取平均值进行比较其实仍然是一种动态概率的手段，如果某次Minor GC存活后的对象突增，远远大于之前统计出来的平均值的话，那本次内存分配担保依然会失败，JVM依然要真正执行一次Full GC。JVM中有个参数叫做HandlePromotionFailure，如果我们一开始的时候将其打开，那么在发生老年代的分配担保时，JVM便会冒一次险，尝试进行一次Minor GC，假设这一次即使新生代中无法容纳此次的新对象，那自己的老年代依旧有空间可以直接存放此次新创建的对象，基于这么一个美好的假想，Minor GC便开始执行了。如果此次Minor GC执行成功，老年代内存分配也担保成功，那么本次JVM就不需要进行Full GC了，这是最好的情况，因为这样可以省去很多的时间与资源开销，虽然在担保失败时还是要进行一次Full GC，时间与资源的消耗少不了，但毕竟这也是有概率在里面，这样也总比我们关掉HandlePromotionFailure而去频繁地进行Full GC会好很多。</p>
 
       
     </div>
@@ -320,7 +335,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/IO模型/" rel="tag"># IO模型</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -333,8 +348,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/11/ITA-2-months-target/" rel="next" title="ITA_2_months_target">
-                <i class="fa fa-chevron-left"></i> ITA_2_months_target
+              <a href="/2019/09/08/本地图片测试/" rel="next" title="本地图片测试">
+                <i class="fa fa-chevron-left"></i> 本地图片测试
               </a>
             
           </div>
@@ -342,10 +357,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/18/初探WebSocket/" rel="prev" title="初探WebSocket">
-                初探WebSocket <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>

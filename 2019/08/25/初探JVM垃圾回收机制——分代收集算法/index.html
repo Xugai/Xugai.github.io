@@ -79,25 +79,25 @@
 
 
 
-<meta name="description" content="​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：  由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个区">
+<meta name="description" content="​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：   由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个">
 <meta name="keywords" content="JVM垃圾回收">
 <meta property="og:type" content="article">
 <meta property="og:title" content="初探JVM垃圾回收机制——分代收集算法">
 <meta property="og:url" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/index.html">
 <meta property="og:site_name" content="Berio&#39;s Base Area">
-<meta property="og:description" content="​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：  由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个区">
+<meta property="og:description" content="​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：   由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个">
 <meta property="og:locale" content="en">
-<meta property="og:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CJVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.PNG">
-<meta property="og:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CGC_1.PNG">
-<meta property="og:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CGC_2.PNG">
-<meta property="og:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CGC_3.PNG">
-<meta property="og:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CGC_4.PNG">
-<meta property="og:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CGC_5.PNG">
-<meta property="og:updated_time" content="2019-08-25T07:45:39.639Z">
+<meta property="og:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/JVM内存结构.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_1.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_2.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_3.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_4.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_5.PNG">
+<meta property="og:updated_time" content="2019-09-08T04:42:43.845Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="初探JVM垃圾回收机制——分代收集算法">
-<meta name="twitter:description" content="​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：  由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个区">
-<meta name="twitter:image" content="http://yoursite.com/.com//%E5%88%9D%E6%8E%A2JVM%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94%E5%88%86%E4%BB%A3%E6%94%B6%E9%9B%86%E7%AE%97%E6%B3%95%5CJVM%E5%86%85%E5%AD%98%E7%BB%93%E6%9E%84.PNG">
+<meta name="twitter:description" content="​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：   由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个">
+<meta name="twitter:image" content="http://yoursite.com/2019/08/25/初探JVM垃圾回收机制——分代收集算法/JVM内存结构.PNG">
 
 
 
@@ -308,7 +308,8 @@
 
       
         <p>​    说起JVM，我们都知道，这是Java虚拟机，它就像是一个微缩、小型版的操作系统。JVM的内存结构，可以由如下图来表示：</p>
-<p><img src="JVM内存结构.PNG" alt></p>
+<img src="/2019/08/25/初探JVM垃圾回收机制——分代收集算法/JVM内存结构.PNG" title="JVM内存结构">
+
 <p>由图我们可以知道，JVM内存模型可以划分为类加载器子系统、运行时数据区与执行引擎以及本地方法区域这四块区域。相信有些读者已经对运行时数据区中的方法区、堆区、栈区、PC寄存器以及本地方法栈多少有些了解了，这里不再做多篇幅去赘述。运行时数据区中各个区域的作用是什么，每个区域都有什么特点等，需要了解的读者可以网上查找以下，网上有很多细致的博文介绍，这里我只补充一点：Oracle Crop在JDK1.8开始，把之前所谓的永久区，也就是方法区已经移除了，原本存储在方法区中的字面意义常量、符号引用、类信息、接口继承等基本信息都改为存储在一个名为“metaSpace”的区域。以前方法区存储数据时需要用到的内存空间都是向JVM申请获得的，而现在使用metaSpace后，该区域直接访问操作系统级别的内存，换句话说，以后该区域的内存分配管辖等都不再受限于JVM本身了，它可以使用更多的内存存储空间。当然，这也不是说metaSpace可以无限量使用操作系统级别的内存空间，否则整个系统迟早会因为内存分配不合理而宕掉。我们也可以通过设置某些参数来限制metaSpace的内存空间使用。</p>
 <p>​    说完JVM的基本知识，我们再来看看JVM中的垃圾回收机制。众所周知，Java之所以这么强大，是因为其JVM实现了内存的自动分配与自动回收，它让我们研发工程师从内存分配这一既复杂又耗精力的劳动中解放出来，让我们只需把关注点放在业务上即可。那么JVM是如何做到这么智能地分配内存，然后又可以在<strong>合适的时间</strong>回收内存的呢？这里就要说到JVM的垃圾回收机制——<strong>分代回收机制了</strong>。</p>
 <p>​    现在商用的虚拟机的垃圾收集都采用“分代收集”策略。这种算法是根据对象存活周期的不同，将内存划分为几块，一般是新生代与老年代。新生代中又可以被划分为三块区域，分别是Eden区、survivor1区与survivor2区。一般来说，这三个区域的内存分配比例是8:1:1。那么正常情况下，JVM的GC何时会被触发呢？</p>
@@ -318,15 +319,20 @@
 </ul>
 <p>那么新生代中的GC情况（Minor GC）是怎么样的呢？我们可以用图例来说明。</p>
 <p>如下图所示，假设这一次当JVM初始化完成时，我们新生成了6个对象，这6个对象刚好填满Eden区：</p>
-<p><img src="GC_1.PNG" alt></p>
+<img src="/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_1.PNG" title="GC_1">
+
 <p>然后下一次我们又有新的对象生成，新的对象也需要放入Eden区，但这时候JVM发现Eden区空间已经不够用了，遂触发一次GC，然后这次GC呢，JVM发现目前现存的6个对象里面，有两个对象从GC Root出发已经不可达了，这两个对象的引用链已经失效了，那么就符合回收原则，因此对这两个对象进行回收（图中灰色小方块即是将要被GC掉的对象）：</p>
-<p><img src="GC_2.PNG" alt></p>
+<img src="/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_2.PNG" title="GC_2">
+
 <p>然后将此次GC后幸存的对象，移动到survivor1区中，这4个对象因为在第一次GC期间存活了下来，因此JVM将他们标记为1岁，然后这时新创建的对象便能存放进Eden区中了：</p>
-<p><img src="GC_3.PNG" alt></p>
+<img src="/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_3.PNG" title="GC_3">
+
 <p>紧接着，当我们不断创建新对象，直到又把Eden区填满，然后又触发了一次GC，这时我们的Survivor1区也被幸存的对象填满了，因此这一次的GC会在Eden区与Survivor1区上进行，然后此时发现Eden区只有1个对象是可以继续存活的，Survivor1区有3个对象是可以继续存活的：</p>
-<p><img src="GC_4.PNG" alt></p>
+<img src="/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_4.PNG" title="GC_4">
+
 <p>它会将这两个区域上依然存活的对象移动到Survivor2区上，然后先前在Survivor1区中已经1岁的对象，因为这次又挺过了第二次的GC，因此年龄岁数又加1，然后Eden区与Survivor1区此时又是空的，又可以往Eden区中放对象了：</p>
-<p><img src="GC_5.PNG" alt></p>
+<img src="/2019/08/25/初探JVM垃圾回收机制——分代收集算法/GC_5.PNG" title="GC_5">
+
 <p>就这样，每次GC时，都只会涉及到Eden区与Survivor区中的其中一个区域，剩下的Survivor区作为保留区域，当下一次Eden区与另一个Survivor区存满时才会将这一次可以存活的对象全部移动到作为保留区域的Survivor区中。这便是发生在新生代中GC情况，需要注意的是，当新生代中存活的对象年龄超过<strong>15岁</strong>时，在下一次GC的时候如果发现这些对象依然是可以存活的，那么这些对象便会被移动到老年代中，不会再放在新生代中了。另外，新生代中的GC也时常伴随着老年代的内存分配担保策略，什么是内存分配担保策略呢？一句话解释就是：你尽管在新生代中存储新建的对象，如果此时新生代真的没有空间可以容纳新建对象的话，那么我就可以把那些新建的对象直接存放在老年代中，而不用在新生代中存放。</p>
 <p>​    这便是Minor GC的情况介绍，至于Major GC与Full GC的情况，限于篇幅缘故，我们下次再做一一详解。</p>
 
@@ -368,6 +374,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/09/08/本地图片测试/" rel="prev" title="本地图片测试">
+                本地图片测试 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -435,7 +445,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">7</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -448,7 +458,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
