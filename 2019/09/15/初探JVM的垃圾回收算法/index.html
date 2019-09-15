@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Schedule,">
+  <meta name="keywords" content="JVM,">
 
 
 
@@ -79,18 +79,22 @@
 
 
 
-<meta name="description" content="ITA两个月学习目标：  ​        一个月过去了，这过去的一个月里，自己学习了DUBBO，写了Demo。基本了解了RPC的作用以及DUBBO的工作机制，但依旧没有机会上手搞项目实战。在我写下这篇目标博文的前两个星期，自己又开始去看Netty相关的知识，从基础的四大IO模型以及WebSocket基本使用方法入手，渐渐我发现，虽然通过自己的兴趣爱好去学习自己感兴趣的东西是无可厚非值得鼓励的，但">
-<meta name="keywords" content="Schedule">
+<meta name="description" content="​    先前博主有篇博文，讲述了JVM垃圾回收算法之分代收集算法，这种算法是以JVM堆区中分为新生代与老年代进行垃圾收集的。目前商用的Hotspot虚拟机，基本普遍都是使用分代收集算法，搭配不同的GC收集器，在不同阶段使用相应的GC收集器进行高效、可靠的垃圾收集。在此分代收集算法之前，还有几种算法，也值得我们拿来讨论，这几种算法分别是：标记——回收算法、复制算法、标记——整理算法，每种算法是如何">
+<meta name="keywords" content="JVM">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ITA_2_months_target">
-<meta property="og:url" content="http://yoursite.com/2019/08/11/ITA-2-months-target/index.html">
+<meta property="og:title" content="初探JVM的垃圾回收算法">
+<meta property="og:url" content="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/index.html">
 <meta property="og:site_name" content="Berio&#39;s Base Area">
-<meta property="og:description" content="ITA两个月学习目标：  ​        一个月过去了，这过去的一个月里，自己学习了DUBBO，写了Demo。基本了解了RPC的作用以及DUBBO的工作机制，但依旧没有机会上手搞项目实战。在我写下这篇目标博文的前两个星期，自己又开始去看Netty相关的知识，从基础的四大IO模型以及WebSocket基本使用方法入手，渐渐我发现，虽然通过自己的兴趣爱好去学习自己感兴趣的东西是无可厚非值得鼓励的，但">
+<meta property="og:description" content="​    先前博主有篇博文，讲述了JVM垃圾回收算法之分代收集算法，这种算法是以JVM堆区中分为新生代与老年代进行垃圾收集的。目前商用的Hotspot虚拟机，基本普遍都是使用分代收集算法，搭配不同的GC收集器，在不同阶段使用相应的GC收集器进行高效、可靠的垃圾收集。在此分代收集算法之前，还有几种算法，也值得我们拿来讨论，这几种算法分别是：标记——回收算法、复制算法、标记——整理算法，每种算法是如何">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2019-08-11T13:05:38.258Z">
+<meta property="og:image" content="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/mark-sweap.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/copy.PNG">
+<meta property="og:image" content="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/mark-compact.PNG">
+<meta property="og:updated_time" content="2019-09-15T13:18:24.395Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ITA_2_months_target">
-<meta name="twitter:description" content="ITA两个月学习目标：  ​        一个月过去了，这过去的一个月里，自己学习了DUBBO，写了Demo。基本了解了RPC的作用以及DUBBO的工作机制，但依旧没有机会上手搞项目实战。在我写下这篇目标博文的前两个星期，自己又开始去看Netty相关的知识，从基础的四大IO模型以及WebSocket基本使用方法入手，渐渐我发现，虽然通过自己的兴趣爱好去学习自己感兴趣的东西是无可厚非值得鼓励的，但">
+<meta name="twitter:title" content="初探JVM的垃圾回收算法">
+<meta name="twitter:description" content="​    先前博主有篇博文，讲述了JVM垃圾回收算法之分代收集算法，这种算法是以JVM堆区中分为新生代与老年代进行垃圾收集的。目前商用的Hotspot虚拟机，基本普遍都是使用分代收集算法，搭配不同的GC收集器，在不同阶段使用相应的GC收集器进行高效、可靠的垃圾收集。在此分代收集算法之前，还有几种算法，也值得我们拿来讨论，这几种算法分别是：标记——回收算法、复制算法、标记——整理算法，每种算法是如何">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/mark-sweap.PNG">
 
 
 
@@ -120,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/08/11/ITA-2-months-target/">
+  <link rel="canonical" href="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/">
 
 
 
 
 
-  <title>ITA_2_months_target | Berio's Base Area</title>
+  <title>初探JVM的垃圾回收算法 | Berio's Base Area</title>
   
 
 
@@ -233,7 +237,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/08/11/ITA-2-months-target/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Berio Xu">
@@ -250,7 +254,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ITA_2_months_target</h1>
+          <h1 class="post-title" itemprop="name headline">初探JVM的垃圾回收算法</h1>
         
 
         <div class="post-meta">
@@ -262,8 +266,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-08-11T21:03:34+08:00">
-                2019-08-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-15T19:08:54+08:00">
+                2019-09-15
               </time>
             
 
@@ -300,17 +304,28 @@
       
 
       
-        <p>ITA两个月学习目标：</p>
-<blockquote>
-<p>​        一个月过去了，这过去的一个月里，自己学习了DUBBO，写了Demo。基本了解了RPC的作用以及DUBBO的工作机制，但依旧没有机会上手搞项目实战。在我写下这篇目标博文的前两个星期，自己又开始去看Netty相关的知识，从基础的四大IO模型以及WebSocket基本使用方法入手，渐渐我发现，虽然通过自己的兴趣爱好去学习自己感兴趣的东西是无可厚非值得鼓励的，但这样好像总不太能把某项技术的原理给了解吃透，或者说自己只是懂每项技术的冰山一角，而蕴藏在海底下的那一大块知识，汲取后才是更加诱人更加具有竞争力的，所以我觉得，自己还是不能太眼高手低，今天看了一点那个，明天看了一点这个，就觉得好像满足了。自己真正应该去做的，是静下心来，好好抓着某项技术去熟悉，实战，了解它的运用场景与一些底层的实现机制，所以自己决定，在未来的两个月里，自己打算通过阅读《深入理解Java虚拟机》来对JVM有一个较为深刻的认识，而自己在这个过程需要掌握的有：</p>
+        <p>​    先前博主有篇博文，讲述了JVM垃圾回收算法之分代收集算法，这种算法是以JVM堆区中分为新生代与老年代进行垃圾收集的。目前商用的Hotspot虚拟机，基本普遍都是使用分代收集算法，搭配不同的GC收集器，在不同阶段使用相应的GC收集器进行高效、可靠的垃圾收集。在此分代收集算法之前，还有几种算法，也值得我们拿来讨论，这几种算法分别是：标记——回收算法、复制算法、标记——整理算法，每种算法是如何的呢，让我们来一 一探讨。</p>
+<h4 id="标记——清除算法"><a href="#标记——清除算法" class="headerlink" title="标记——清除算法"></a>标记——清除算法</h4><p>标记——清除（Mark——Sweap）可谓是在JVM中进行GC时最早提出来的收集算法概念，这种算法也被称为最朴素的算法，因为过程确实简单，没有涉及到多么复杂的细节。其大概的算法操作描述是：在GC前，对堆区上现存的对象进行一次可达性分析，扫描出那些符合GC的对象，然后先对其进行标记（Mark），接着等到GC动作真正发生时，JVM便会对那些被标记了的对象直接进行清理（Sweap）操作。补充一句话，之所以说它是最朴素的收集算法，是因为后续的收集算法都是基于这种思路并对其进行改进而得到的。不过，虽然这种算法操作简单，容易理解，但是也有它的弊端。它的不足有两个：</p>
 <ul>
-<li>JVM的内存划分模型</li>
-<li>常见的JVM垃圾回收算法有哪些，以及常见的垃圾收集器又有哪些，作用分别是什么</li>
-<li>尝试模拟不同情况的GC操作（Major GC，Minor GC，Full GC）</li>
-<li>尝试通过改变JVM的GC策略，来达到JVM性能调优的目的</li>
-<li>熟悉并操作常见的JVM监控调优工具</li>
+<li>一个是效率问题，标记和清除两个过程的效率都不高；</li>
+<li>一个是空间位置利用率问题，标记清除之后会产生大量不连续的内存碎片，空间碎片太多可能会导致以后在程序运行过程中需要分配较大对象时，无法找到足够的连续内存空间而不得不提前触发另一次GC动作。</li>
 </ul>
-</blockquote>
+<p>标记——清除算法的示意图如下所示。</p>
+<img src="/2019/09/15/初探JVM的垃圾回收算法/mark-sweap.PNG" title="标记-清除算法示意图">
+
+
+
+<h4 id="复制算法"><a href="#复制算法" class="headerlink" title="复制算法"></a>复制算法</h4><p>复制算法（Copying），是为了解决上文中提到过的标记——清除算法而设计诞生出来的。这种算法，将内存划分为同等大小的两块区域，一块区域用来存放对象，一块区域不存放任何对象，作为替换空间的角色存在，每次也只使用一块区域。当这一块区域的存储空间用完时，就将此次可达性分析后依然存活的对象一次性复制（Copy）到另一块存储区域上，然后再将这块区域上的对象一次性清理掉。这样，便不存在所谓的空间碎片问题，每次清理完后都是一块全新的存储区域，只要我们移动堆顶上的指针便能实现从这块区域到另一块区域使用的目的。不过当然，这样明显内存的使用空间缩小了一半，GC的次数可能会因此而上升。复制算法的示意图如下所示。</p>
+<img src="/2019/09/15/初探JVM的垃圾回收算法/copy.PNG" title="复制回收算法示意图">
+
+
+
+<h4 id="标记——整理算法"><a href="#标记——整理算法" class="headerlink" title="标记——整理算法"></a>标记——整理算法</h4><p>虽然复制算法在一定程度上解决了标记——清除算法的效率问题，但如果出现一次GC清理后，所有的对象100%都存活的极端情况，那在使用复制算法的情况下，复制、GC活动将会变得非常频繁，这样效率自然而然也会受到影响。更关键的是，在所有对象都存活的极端情况，如果不想浪费50%的存储空间，就需要有老年代的内存分配担保，而过度频繁地在老年代进行内存分配担保，将有很大可能提前触发一次Full GC，这样整个JVM的运行效率将会受到影响，严重点可能出现系统无响应、卡顿几秒的情况。</p>
+<p>为此，有人提出了另外一种垃圾收集策略：“标记——整理（Mark——Compact）”算法。标记过程仍然与“标记——清除”算法一致，但后续步骤不再是直接清理掉可回收对象，而是让存活对象向一端移动，形成一个<code>连续的已用的</code>内存占用空间，然后将端外的其他可回收对象一次性清理掉。标记——整理算法的示意图如下所示。</p>
+<img src="/2019/09/15/初探JVM的垃圾回收算法/mark-compact.PNG" title="标记-整理算法示意图">
+
+
+
 
       
     </div>
@@ -328,7 +343,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Schedule/" rel="tag"># Schedule</a>
+            <a href="/tags/JVM/" rel="tag"># JVM</a>
           
         </div>
       
@@ -341,8 +356,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/08/08/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2019/09/08/浅谈JVM中的内存分配担保机制/" rel="next" title="浅谈JVM中的内存分配担保机制">
+                <i class="fa fa-chevron-left"></i> 浅谈JVM中的内存分配担保机制
               </a>
             
           </div>
@@ -350,10 +365,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/08/11/NIO的同步非阻塞解释/" rel="prev" title="NIO的同步非阻塞解释">
-                NIO的同步非阻塞解释 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -405,8 +416,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            Overview
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -457,6 +477,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#标记——清除算法"><span class="nav-number">1.</span> <span class="nav-text">标记——清除算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#复制算法"><span class="nav-number">2.</span> <span class="nav-text">复制算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#标记——整理算法"><span class="nav-number">3.</span> <span class="nav-text">标记——整理算法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
