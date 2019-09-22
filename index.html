@@ -229,6 +229,163 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/22/深入浅出CAS理念/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Berio Xu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Berio's Base Area">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/09/22/深入浅出CAS理念/" itemprop="url">深入浅出CAS理念</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2019-09-22T18:12:10+08:00">
+                2019-09-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>这几天又重新接触了CAS，让我对它有了更熟悉的了解。</p>
+<p>所谓CAS，全称是Compare And Swap，比较和交换。有人说CAS是一种技术，但我觉得它更是一种概念。在JAVA多线程的世界中，到处都有CAS的身影。它与传统的加锁保证多线程安全性是有区别的，正常的CAS过程，即是这一次当前线程去指定内存地址中取目标值出来，然后与期望值进行比较，如果一样则使用新值去替换当前值。这个过程听起来虽然简单，但真正实现起来还是有些难度的。为什么呢，因为除了在获取目标值与拿目标值与期望值进行比较的这么一个循环过程中，CAS底层还要锁住CPU总线，让其他线程无法访问该项指令所指向的内存地址，以此来达到原子性的效果。</p>
+<p>那什么是原子性呢？所谓原子性，是指一系列操作都是连续的、不能被打断的。线程在这一次被分配有时间片然后CPU开始调度该线程，直到下一次线程从运行状态又切换回就绪状态的这个过程里面，线程所做的所有事情都是连续的，不会被打断。像我们常见的定义一个基本数据类型整型，然后对其进行自增或者自减的操作，就不属于原子操作。拿自增来说，一个线程需要对一个目标变量进行加1操作，它需要走的流程有：取值、进行加1、写值。这三个操作，看起来是一个连续的、不会被分割的操作，但其实际上是有可能被打断的，而且概率挺大。因此，当在多线程并发对同一个变量进行操作时，如果不额外进行一些处理（比如传统意义上的加锁）的话，那么最终执行完的结果将有很大可能与预期不一致。以下来举一个例子：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main.java.interview.Thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tester</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">volatile</span> <span class="keyword">int</span> race = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> THREAD_COUNT = <span class="number">20</span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span></span>&#123;</span><br><span class="line">        race++;  <span class="comment">//原本的自增并不属于原子操作，因此虽然保证了可见性，但数据完整性却无法保证</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Thread [] threads = <span class="keyword">new</span> Thread[THREAD_COUNT];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; THREAD_COUNT; ++i)&#123;</span><br><span class="line">            threads[i] = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">1000</span>; ++j)&#123;</span><br><span class="line">                        increase();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            threads[i].start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(Thread.activeCount() &gt; <span class="number">1</span>)&#123;</span><br><span class="line">            Thread.yield();</span><br><span class="line">        &#125;</span><br><span class="line">        System.out.println(race);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如上图代码所示，在本例中，有一个由<code>volatile</code>修饰符修饰的变量<code>race</code>，该变量同时也是<code>static</code>的，因此保证了在JVM内存中，永远都只有该变量的一份拷贝。然后<code>volatile</code>修饰符则保证了变量的可见性，它强制每个访问该变量的线程，无论是读操作还是写操作，都是在内存中进行，而不是在各自的存储缓冲区中进行，这便保证了数据来源的统一性。这里额外说明一点，为什么线程有可能会在各自的存储缓冲区中进行变量的读写操作呢？这与JVM与编译器的优化策略相关，从性能角度考虑，相比于在内存地址上访问该变量，把变量拷贝到自己的存储缓冲区中，然后以后每次需要时都访问自己缓冲区中的变量的这一方式，效率会快很多。但是这种方式有个弊端，显而易见的就是在多线程情况下，变量的更新无法同步到每一个线程，因此线程可见性的问题就产生了，为了解决这个问题，遂而便有了<code>volatile</code>关键字，其作用也就如上述所说。</p>
+<p>说完了<code>volatile</code>，我们继续回到该段代码来。该段代码创建了20个线程，然后每个线程对相同的变量<code>race</code>进行自增操作。按照我们的预期来说，等这段代码完全执行成功后，最终的输出结果应该会是20000。但实际结果真的是这样吗？我们不妨来验证一下。执行多次该段代码，我们会发现，最终的输出结果有时候会符合我们预期，</p>
+<img src="/2019/09/22/深入浅出CAS理念/pc1.PNG" title="多线程并发时符合预期的输出结果">
+
+<p>有时候会小于20000。</p>
+<img src="/2019/09/22/深入浅出CAS理念/pc2.PNG" title="多线程并发时不符合预期的输出结果">
+
+<p>那这是为什么呢？我们不妨对该段代码进行反编译一下，以下是博主通过原生的jdk反编译命令得到的反编译结果：</p>
+<img src="/2019/09/22/深入浅出CAS理念/p3.PNG" title="代码反编译结果">
+
+<p>由反编译结果可以发现，在被修饰符<code>static</code>修饰的方法<code>increase</code>中，</p>
+<ul>
+<li>getstatic，从内存基址中取出变量</li>
+<li>iadd，对变量进行加1操作</li>
+<li>putstatic，将变量写回内存基址中</li>
+</ul>
+<p>这三个操作，因为不属于原子操作，所以在线程执行这三个步骤时，是有可能发生CPU中断事件的。而中断事件的发生，则意味着当当前线程正在对变量进行加1操作时，由于CPU时间片的分配原因，此时又切换到另一个线程对该变量进行取值、加1以及写回操作。然后当又轮到该线程时，该线程按照正确的顺序对变量加1、写回操作，这时写回的结果就覆盖了先前另一个线程写回的结果，这也导致了我们平时认为的：变量应该会自增了2次才对的这一观点而受到很大的质疑。</p>
+<p>那我们有什么方法可以杜绝在多线程并发情况下，由于变量没有及时得到同步而导致数据不一致的问题呢？传统的做法可以是对执行的方法上锁：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span></span>&#123;</span><br><span class="line">        race++;  <span class="comment">//原本的自增并不属于原子操作，因此虽然保证了可见性，但数据完整性却无法保证</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样，该段代码每次只允许一个线程进入，而其他线程因为无法进入该段代码，因此也无法取得变量值。只有当先前拿到对象锁的线程退出这段代码后，其他线程才有访问变量的机会。从这一点来看，我们似乎解决了变量同步的问题。当然，这是从上锁的层面执行的，通过上锁，保证了线程访问变量的顺序，一次只能有一个线程访问该变量。这么来看是好的，但有个需要注意的点得提一下：传统意义上的加锁，都不可避免会带来一个问题：性能问题。当线程并发数指数级上升时，由于上锁的缘故，会有大量的线程阻塞在该段代码之前，而对于CPU来说，要维护这么一个数量较多的、处于阻塞状态的线程队列，也是需要耗费不少的资源。因此，从性能方面考量的话，对方法直接上锁可能不太会是一个好的解决方案。不过根据网上资料提出，从JDK7开始，对<code>synchronized</code>关键字的执行细节进行了一些优化，从一定程度上，提高了线程并发时的执行效率，这一点我们不再做深入探讨。</p>
+<p>那还有其他的方式吗？前面说到过原子操作，那我们有可能让上述代码的自增操作，真正成为一个原子操作吗？答案是可以的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main.java.interview.Thread;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.concurrent.atomic.AtomicInteger;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * Created by rabbit on 2018/11/24.</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Tester</span> </span>&#123;</span><br><span class="line"></span><br><span class="line"><span class="comment">//    public static volatile int race = 0;</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">volatile</span> AtomicInteger race = <span class="keyword">new</span> AtomicInteger(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> THREAD_COUNT = <span class="number">20</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">increase</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="comment">//        race++;  //原本的自增并不属于原子操作，因此虽然保证了可见性，但数据完整性却无法保证</span></span><br><span class="line">        race.getAndIncrement();  <span class="comment">// 原子操作，取值，加1，写值</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String [] args)</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">        Thread [] threads = <span class="keyword">new</span> Thread[THREAD_COUNT];</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; THREAD_COUNT; ++i)&#123;</span><br><span class="line">            threads[i] = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable() &#123;</span><br><span class="line">                <span class="meta">@Override</span></span><br><span class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                    <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; <span class="number">1000</span>; ++j)&#123;</span><br><span class="line">                        increase();</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">            threads[i].start();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">while</span>(Thread.activeCount() &gt; <span class="number">1</span>)&#123;</span><br><span class="line">            Thread.yield();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(race);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JDK提供了一个名为<code>concurrent</code>的并发包，其里面有各种各样的工具用来应对多线程并发时出现的各种情况。上述代码中的<code>AtomicInteger</code>类，便是一个原子操作类。其里面的源码实现，便有使用到我们早先提到过的CAS理念——CompareAndSwap。通过跟踪<code>getAndIncrement()</code>方法，我们可以发现，其底层的实现逻辑是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">int</span> <span class="title">getAndAddInt</span><span class="params">(Object var1, <span class="keyword">long</span> var2, <span class="keyword">int</span> var4)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> var5;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            var5 = <span class="keyword">this</span>.getIntVolatile(var1, var2);</span><br><span class="line">        &#125; <span class="keyword">while</span>(!<span class="keyword">this</span>.compareAndSwapInt(var1, var2, var5, var5 + var4));</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> var5;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>先取到目标值，然后调用<code>compareAndSwapInt()</code>进行目标值的更新。如果当前目标值跟预期值是一样的，那就进行更新操作，否则一直循环重试，直到发现此次目标值跟预期值一样。这便是CAS的基本操作，不过当然，该方法还有更加底层的实现，其底层的实现是通过JNI接口与本地方法进行交互，类似早先提到过的锁住CPU总线的方式，以此来达到变量同步更新的目的。不过呢，随着现在CPU制造的发展，从早先的单核处理器，慢慢过渡到多核处理器，对于多核处理器来说，底层的汇编代码又会对指令添加LOCK前缀，然后缩小锁粒度，只是在该变量所在内存地址的缓存行中进行行锁定，这样便提高了程序执行的效率。而至于其他细节，有兴趣的网友可以自行深入了解。</p>
+<p>说到最后，CAS虽然解决了我们多线程并发情况下数据无法得到同步更新的问题，而且是避免了传统的上锁机制，一定程度上性能也得到了保证。但是呢，CAS也还是有一些缺点：</p>
+<ul>
+<li>由于验证目标值是否与预期值一致是通过不断的代码循环来实现的，如果目标值总是无法与预期值一致，那代码将长期陷入循环，这样便意味着CPU长时间的占用，极端情况下会消耗大量不必要的资源。</li>
+<li>可能出现ABA漏洞。所谓ABA漏洞，是指当前线程在取值时发现目标值与预期值一致，但是在真正执行赋值操作前，<strong>目标值曾经被其他线程篡改过，但又被改回来了</strong>，因此在最终真正执行更新值时，线程发现目标值依然与预期相符，因此就“顺理成章”认为当前目标值没有被其他线程访问过，是安全的。对于这样的情况，Java并发包里提供了一个原子标记引用类——<code>AtomicStampedReference</code>，用来解决上述的ABA问题。不过呢，对于这种ABA问题，可能传统意义上的上锁操作可以完全避免这样的问题的发生，因此我们在什么时候需要上锁，什么时候不需要上锁，可能我们在日常工作过程中还是得好好权衡，好好斟酌。</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/09/15/初探JVM的垃圾回收算法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1237,7 +1394,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-count">8</span>
                   <span class="site-state-item-name">posts</span>
                 </a>
               </div>
@@ -1250,7 +1407,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">tags</span>
                 
               </div>
